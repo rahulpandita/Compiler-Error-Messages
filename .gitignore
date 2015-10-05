@@ -1,0 +1,10 @@
+
+*.exe
+
+src/data/jvaSrc
+
+src/data/NETsrc
+
+src/data/op.txt
+
+src/target/*
