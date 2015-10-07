@@ -8,11 +8,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,7 +27,7 @@ import edu.ncsu.csc.dlf.JComp;
 public class JavaSourceCrawler {
 	
 	public static final String UTF_8 = "utf-8";
-	public static final String OP_TXT = "data" + File.separator + "op.txt";
+	public static final String OP_TXT = "data" + File.separator + "op.xlsx";
 	public static final String JVA_SRC = "data"+ File.separator + "jvaSrc" +  File.separator;
 	public static final String JAVA_ERR_EXAMPLES_URL = "http://cr.openjdk.java.net/~jjg/diags-examples.html";
 
@@ -33,7 +35,7 @@ public class JavaSourceCrawler {
 		
 		Document doc = getDoc(JAVA_ERR_EXAMPLES_URL);
 		Map<String, String> srcMap =  getJavaSrcMap(doc);
-		List<String> errStr = getError(srcMap);
+		Map<String, String> errStr = getError(srcMap);
 		writeOp(errStr, OP_TXT);
 		writeMap(srcMap, JVA_SRC);
 		cleanup();
@@ -106,15 +108,15 @@ public class JavaSourceCrawler {
 	
 	
 	/**
-	 * Returns the error message returned by {@link JComp}
+	 * Returns the error messages returned by {@link JComp}
 	 * @param srcMap a {@link Map} with file names as Keys and source code contents as values
 	 * @return
 	 */
-	private List<String> getError(Map<String, String> srcMap) {
+	private Map<String, String> getError(Map<String, String> srcMap) {
 		JComp jc = new JComp();
-		List<String> returnList = new ArrayList<String>();
+		Map<String, String> returnList = new HashMap<String, String>();
 		for (String fileName : srcMap.keySet()) {
-			returnList.add(jc.compile(fileName.replace(".java", ""), srcMap.get(fileName)));
+			returnList.put(fileName, jc.compile(fileName.replace(".java", ""), srcMap.get(fileName)));
 		}
 		return returnList;
 	}
@@ -123,24 +125,33 @@ public class JavaSourceCrawler {
 	 * Write Compiler Error Message List to persistence
 	 * @param errStr
 	 */
-	private void writeOp(List<String> errStr, String fileName) {
-
-		Writer writer = null;
-
-		try {
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName,false), UTF_8));
-			for (String line : errStr) {
-				writer.write(line);
-				writer.write("\n");
+	private void writeOp(Map<String, String> errMap, String fileName) {
+		FileOutputStream fileOut = null;
+		try 
+		{
+			Workbook wb = new XSSFWorkbook();
+			Sheet sheet = wb.createSheet();
+			int i=0;
+			Row row;
+			for (String srcFileName : errMap.keySet()) {
+				row = sheet.createRow(i);
+				row.createCell(0).setCellValue(srcFileName);
+				row.createCell(1).setCellValue(errMap.get(srcFileName));
+				
 			}
-		} catch (IOException ex) {
-			// report
-		} finally {
-			try {
-				writer.close();
-			} catch (Exception ex) {
-			}
+			
+			fileOut = new FileOutputStream(fileName, false);
+			wb.write(fileOut);
+		    fileOut.close();
+		    wb.close();
+		} 
+		catch (Exception e) {
+			e.printStackTrace(System.err);
 		}
+		
+		
+	    
+		
 	}
 
 	/**

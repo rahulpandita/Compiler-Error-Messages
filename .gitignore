@@ -10,3 +10,5 @@ src/data/op.txt
 src/target/*
 
 src/data/com.ilog.rules.Java2CSharpTranslator_1.3.6.20110331_01.jar
+
+src/data/op.xlsx
