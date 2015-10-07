@@ -32,7 +32,7 @@ public class JavaSourceCrawler {
 	public void crawl() {
 		
 		Document doc = getDoc(JAVA_ERR_EXAMPLES_URL);
-		Map<String, String> srcMap =  getClassMap(doc);
+		Map<String, String> srcMap =  getJavaSrcMap(doc);
 		List<String> errStr = getError(srcMap);
 		writeOp(errStr);
 		writeMap(srcMap);
@@ -107,14 +107,15 @@ public class JavaSourceCrawler {
 	 * @param doc
 	 * @return a {@link Map} with file names as Keys and file contents as values
 	 */
-	private Map<String, String> getClassMap(Document doc) {
+	private Map<String, String> getJavaSrcMap(Document doc) {
 		Map<String, String> returnMap = new HashMap<String, String>();
 		Elements eleList = doc.select("h4");
 		for(Element element:eleList)
 		{
 			if(element.text().toString().endsWith(".java"))
 			{
-				if(element.nextElementSibling().nodeName().equalsIgnoreCase("div")&&element.nextElementSibling().className().equals("file"))
+				if(element.nextElementSibling().nodeName().equalsIgnoreCase("div")
+						&& element.nextElementSibling().className().equals("file"))
 				{
 					String javaText = getText(element.nextElementSibling().child(1));
 					returnMap.put(element.text(), javaText);
