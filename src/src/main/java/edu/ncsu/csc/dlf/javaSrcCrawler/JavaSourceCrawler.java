@@ -102,6 +102,11 @@ public class JavaSourceCrawler {
 		
 	}
 
+	/**
+	 * Extracts Example Java Source Files (demonstrating compiler errors) from the HTML {@link Document} 
+	 * @param doc
+	 * @return a {@link Map} with file names as Keys and file contents as values
+	 */
 	private Map<String, String> getClassMap(Document doc) {
 		Map<String, String> returnMap = new HashMap<String, String>();
 		Elements eleList = doc.select("h4");
@@ -112,10 +117,6 @@ public class JavaSourceCrawler {
 				if(element.nextElementSibling().nodeName().equalsIgnoreCase("div")&&element.nextElementSibling().className().equals("file"))
 				{
 					String javaText = getText(element.nextElementSibling().child(1));
-					
-					System.err.println(element.text() +"\n" + javaText);
-					if(returnMap.containsKey(element.text()))
-						System.out.println("Here");
 					returnMap.put(element.text(), javaText);
 				}
 			}
