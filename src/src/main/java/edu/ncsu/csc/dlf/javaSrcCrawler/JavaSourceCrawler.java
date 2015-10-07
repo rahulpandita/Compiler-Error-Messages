@@ -128,7 +128,7 @@ public class JavaSourceCrawler {
 		Writer writer = null;
 
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), UTF_8));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName,false), UTF_8));
 			for (String line : errStr) {
 				writer.write(line);
 				writer.write("\n");
@@ -153,7 +153,7 @@ public class JavaSourceCrawler {
 			Writer writer = null;
 
 			try {
-				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(directory + fileName), UTF_8));
+				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(directory + fileName, false), UTF_8));
 				writer.write(srcMap.get(fileName));
 			} catch (IOException ex) {
 				// report
