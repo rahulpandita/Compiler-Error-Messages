@@ -120,7 +120,7 @@ public class JavaSourceCrawler {
 	}
 
 	/**
-	 * Write Compiler Error Message List to persistance
+	 * Write Compiler Error Message List to persistence
 	 * @param errStr
 	 */
 	private void writeOp(List<String> errStr, String fileName) {
