@@ -35,7 +35,7 @@ public class JavaSourceCrawler {
 		Map<String, String> srcMap =  getJavaSrcMap(doc);
 		List<String> errStr = getError(srcMap);
 		writeOp(errStr, OP_TXT);
-		writeMap(srcMap);
+		writeMap(srcMap, JVA_SRC);
 		cleanup();
 	}
 	
@@ -143,12 +143,17 @@ public class JavaSourceCrawler {
 		}
 	}
 
-	private void writeMap(Map<String, String> srcMap) {
+	/**
+	 * Writes the crawled Java Sources to persistence
+	 * @param srcMap
+	 * @param directory
+	 */
+	private void writeMap(Map<String, String> srcMap, String directory) {
 		for (String fileName : srcMap.keySet()) {
 			Writer writer = null;
 
 			try {
-				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(JVA_SRC + fileName), UTF_8));
+				writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(directory + fileName), UTF_8));
 				writer.write(srcMap.get(fileName));
 			} catch (IOException ex) {
 				// report
