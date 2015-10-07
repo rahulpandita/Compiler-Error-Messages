@@ -105,6 +105,15 @@ public class JavaSourceCrawler {
 	 }
 	
 	
+	private List<String> getError(Map<String, String> srcMap) {
+		JComp jc = new JComp();
+		List<String> returnList = new ArrayList<String>();
+		for (String fileName : srcMap.keySet()) {
+			returnList.add(jc.compile(fileName.replace(".java", ""), srcMap.get(fileName)));
+		}
+		return returnList;
+	}
+
 	private void writeOp(List<String> errStr) {
 
 		Writer writer = null;
@@ -123,15 +132,6 @@ public class JavaSourceCrawler {
 			} catch (Exception ex) {
 			}
 		}
-	}
-
-	private List<String> getError(Map<String, String> srcMap) {
-		JComp jc = new JComp();
-		List<String> returnList = new ArrayList<String>();
-		for (String fileName : srcMap.keySet()) {
-			returnList.add(jc.compile(fileName.replace(".java", ""), srcMap.get(fileName)));
-		}
-		return returnList;
 	}
 
 	private void writeMap(Map<String, String> srcMap) {
