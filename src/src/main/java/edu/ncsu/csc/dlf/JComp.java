@@ -12,6 +12,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
 
+@SuppressWarnings("restriction")
 public class JComp 
 {
 	public static void main(String[] args) {
@@ -31,20 +32,19 @@ public class JComp
 	    Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(file);
 	    CompilationTask  task = compiler.getTask(null, null, diagnostics, null, null, compilationUnits);
 
-	    boolean success = task.call();
+	    task.call();
 	    for (Diagnostic<?> diagnostic : diagnostics.getDiagnostics()) {
-	      System.out.println(diagnostic.getCode());
+	      /*System.out.println(diagnostic.getCode());
 	      System.out.println(diagnostic.getKind());
 	      System.out.println(diagnostic.getPosition());
 	      System.out.println(diagnostic.getStartPosition());
 	      System.out.println(diagnostic.getEndPosition());
 	      System.out.println(diagnostic.getSource());
-	      System.out.println(diagnostic.getMessage(null));
-	      errStr.append(fileName).append("\t").append(diagnostic.getCode()).append("\t").append(diagnostic.getMessage(null));
+	      System.out.println(diagnostic.getMessage(null));*/
+	      errStr.append(diagnostic.getMessage(null));
 
 	    }
-	    System.out.println("Success: " + success);
-		return errStr.toString();
+	    return errStr.toString();
 	}
 	
 	class JavaSourceFromString extends SimpleJavaFileObject {

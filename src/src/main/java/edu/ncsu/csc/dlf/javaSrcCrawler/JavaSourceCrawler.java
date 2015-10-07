@@ -134,10 +134,9 @@ public class JavaSourceCrawler {
 			int i=0;
 			Row row;
 			for (String srcFileName : errMap.keySet()) {
-				row = sheet.createRow(i);
+				row = sheet.createRow(i++);
 				row.createCell(0).setCellValue(srcFileName);
 				row.createCell(1).setCellValue(errMap.get(srcFileName));
-				
 			}
 			
 			fileOut = new FileOutputStream(fileName, false);
