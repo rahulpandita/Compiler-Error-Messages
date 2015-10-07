@@ -34,7 +34,7 @@ public class JavaSourceCrawler {
 		Document doc = getDoc(JAVA_ERR_EXAMPLES_URL);
 		Map<String, String> srcMap =  getJavaSrcMap(doc);
 		List<String> errStr = getError(srcMap);
-		writeOp(errStr);
+		writeOp(errStr, OP_TXT);
 		writeMap(srcMap);
 		cleanup();
 	}
@@ -105,6 +105,11 @@ public class JavaSourceCrawler {
 	 }
 	
 	
+	/**
+	 * Returns the error message returned by {@link JComp}
+	 * @param srcMap a {@link Map} with file names as Keys and source code contents as values
+	 * @return
+	 */
 	private List<String> getError(Map<String, String> srcMap) {
 		JComp jc = new JComp();
 		List<String> returnList = new ArrayList<String>();
@@ -114,12 +119,16 @@ public class JavaSourceCrawler {
 		return returnList;
 	}
 
-	private void writeOp(List<String> errStr) {
+	/**
+	 * Write Compiler Error Message List to persistance
+	 * @param errStr
+	 */
+	private void writeOp(List<String> errStr, String fileName) {
 
 		Writer writer = null;
 
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(OP_TXT), UTF_8));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), UTF_8));
 			for (String line : errStr) {
 				writer.write(line);
 				writer.write("\n");
